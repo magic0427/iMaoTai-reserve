@@ -81,6 +81,10 @@ python3 main.py
 
 初版代码：https://github.com/tianyagogogo/imaotai
 
+## SpiderReverser
+* 此仓库代码是从原作者处fork而来，非常感谢原作者的开源精神
+* 本人只作简单的维护，以及一些简单功能的增加，原作者的收款码暂不删除，感谢的话请感谢原作者
+
 
 
 
