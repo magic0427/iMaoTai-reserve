@@ -9,7 +9,7 @@ on:
     paths:
       - '.github/workflows/**'
   schedule:
-    - cron: '10,40 9 * * *'
+    - cron: '10,40 1 * * *'  # 需要注意时区，GitHub默认使用的是UTC时区，这里表示的是 shanghai 早上9.10 9.40
 
 env:
   TZ: Asia/Shanghai
