@@ -9,7 +9,7 @@ on:
     paths:
       - '.github/workflows/**'
   schedule:
-    - cron: '30 10,11 * * *'  # 需要注意时区，GitHub默认使用的是UTC时区，而且 Github Actions 会 delay 而且是无固定时间的 delay，若要注重定时任务执行的准确性，请部署到服务器
+    - cron: '30 11 * * *'  # 需要注意时区，GitHub默认使用的是UTC时区，而且 Github Actions 会 delay 而且是无固定时间的 delay，若要注重定时任务执行的准确性，请部署到服务器
 
 env:
   TZ: Asia/Shanghai
