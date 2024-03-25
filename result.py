@@ -41,6 +41,7 @@ for section in configs.sections():
     if (configs.get(section, 'enddate') != 9) and (TODAY > configs.get(section, 'enddate')):
         continue
     mobile = privateCrypt.decrypt_aes_ecb(section, aes_key)
+    mobile = mobile.replace(mobile[3:7], '****')
     token = configs.get(section, 'token')
     userId = privateCrypt.decrypt_aes_ecb(configs.get(section, 'userid'), aes_key)
     lat = configs.get(section, 'lat')
@@ -62,6 +63,10 @@ if '申购失败' in s_content:
     title="申购失败通知:"
 elif '申购中' in s_content:
     title="申购未结束:"
+elif '未申购' in s_content:
+    title ="今日未申购:"
+elif '失效' in s_content:
+    title ="登录token失效:"
 else:
     title = "申购成功通知:"
     process.send_msg(title, s_content)

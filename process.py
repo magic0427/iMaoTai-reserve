@@ -352,26 +352,35 @@ def get_result(mobile):
     url = "https://app.moutai519.com.cn/xhr/front/mall/reservation/list/pageOne/queryV2"
     response = requests.get(url, headers=headers, cookies=cookies)
 
-
-    result = []
-    now = datetime.datetime.now()
-    today = datetime.datetime(now.year, now.month, now.day)
-    today_timestamp = int(today.timestamp()) * 1000
-    status_dict = {
-        0: "申购中",
-        1: "申购失败"
-    }
-    try:
-        for item in response.json()['data']['reservationItemVOS']:
-            if item['reservationTime'] >today_timestamp:
-                logging.info(item)
-                itemName = item['itemName']
-                status = item['status']
-                cur = datetime.datetime.fromtimestamp(item['reservationTime'] // 1000).strftime("%Y-%m-%d")
-                result.append("申购时间:{} 申购项目:{} 申购状态:{}".format(cur, itemName, status_dict.get(status, "成功")))
-    except Exception as e:
-        pass
-    result_text = "\n".join(result)
+# 如果是成功，推送消息简化；失败消息则全量推送
+    if response.status_code == 200:
+        result = []
+        now = datetime.datetime.now()
+        today = datetime.datetime(now.year, now.month, now.day)
+        today_timestamp = int(today.timestamp()) * 1000
+        status_dict = {
+            0: "申购中",
+            1: "申购失败"
+        }
+        try:
+            for item in response.json()['data']['reservationItemVOS']:
+                if item['reservationTime'] >today_timestamp:
+                    logging.info(item)
+                    itemName = item['itemName']
+                    status = item['status']
+                    cur = datetime.datetime.fromtimestamp(item['reservationTime'] // 1000).strftime("%Y-%m-%d")
+                    result.append("申购时间:{} 申购项目:{} 申购状态:{}".format(cur, itemName, status_dict.get(status, "成功")))
+        except Exception as e:
+            pass
+        
+        # 判断是否今日申购不成功
+        if not result:
+            result.append("申购时间:"+today.strftime("%Y-%m-%d")+" 申购状态:今日未申购")
+        
+        result_text = "\n".join(result)
+    else:
+        result_text = f'Code:{response.status_code}; Body:{response.text}; 登录token失效'
+    
     logging.info(
-        f'申购结果 : 手机号:{mobile} \n{result_text}')
-    return f'申购结果 : 手机号:{mobile} \n{result_text}'
+        f'申购结果 : 手机号:{mobile}; {result_text}')
+    return f'申购结果 : 手机号:{mobile}; {result_text}'
