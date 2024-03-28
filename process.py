@@ -365,22 +365,22 @@ def get_result(mobile):
         try:
             for item in response.json()['data']['reservationItemVOS']:
                 if item['reservationTime'] >today_timestamp:
-                    logging.info(item)
+                    #logging.info(item)
                     itemName = item['itemName']
                     status = item['status']
                     cur = datetime.datetime.fromtimestamp(item['reservationTime'] // 1000).strftime("%Y-%m-%d")
-                    result.append("申购时间:{} 申购项目:{} 申购状态:{}".format(cur, itemName, status_dict.get(status, "成功")))
+                    result.append("手机号:{} 申购时间:{} 申购项目:{} 申购状态:{}".format(mobile, cur, itemName, status_dict.get(status, "申购成功")))
         except Exception as e:
             pass
         
         # 判断是否今日申购不成功
         if not result:
-            result.append("申购时间:"+today.strftime("%Y-%m-%d")+" 申购状态:今日未申购")
+            result.append("手机号:"+mobile+" 申购时间:"+today.strftime("%Y-%m-%d")+" 申购状态:今日未申购")
         
         result_text = "\n".join(result)
     else:
-        result_text = f'Code:{response.status_code}; Body:{response.text}; 登录token失效'
+        result_text = f'手机号:{mobile}; Code:{response.status_code}; Body:{response.text}; 登录token失效'
     
     logging.info(
-        f'申购结果 : 手机号:{mobile}; {result_text}')
-    return f'申购结果 : 手机号:{mobile}; {result_text}'
+        f'申购结果 : \n{result_text}')
+    return f'申购结果 : \n{result_text}'

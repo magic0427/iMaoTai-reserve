@@ -35,7 +35,7 @@ if len(configs.sections()) == 0:
 
 aes_key = privateCrypt.get_aes_key()
 
-s_title = '茅台申购成功'
+title = ""
 s_content = ""
 for section in configs.sections():
     if (configs.get(section, 'enddate') != 9) and (TODAY > configs.get(section, 'enddate')):
@@ -59,14 +59,18 @@ for section in configs.sections():
         logging.error(e)
 
 # 推送消息
-if '申购失败' in s_content:
-    title="申购失败通知:"
+if '申购成功' in s_content:
+    title = "申购成功通知:"
+    process.send_msg(title, s_content)
+elif '申购失败' in s_content:
+    title = "申购失败通知:"
 elif '申购中' in s_content:
-    title="申购未结束:"
+    title ="申购未结束:"
 elif '未申购' in s_content:
     title ="今日未申购:"
 elif '失效' in s_content:
     title ="登录token失效:"
 else:
-    title = "申购成功通知:"
-    process.send_msg(title, s_content)
+    logging.info(s_content)
+
+logging.info(title)
